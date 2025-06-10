@@ -24,6 +24,16 @@ const LatexEditor: React.FC<LatexEditorProps> = ({
   const renderFormula = () => {
     try {
       setError("");
+      if (!value.trim()) {
+        return (
+          <div className="p-4 min-h-[200px] flex items-center justify-center bg-white rounded border">
+            <div className="text-gray-400 text-sm">
+              Введите LaTeX формулу слева...
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div
           style={{
@@ -33,13 +43,7 @@ const LatexEditor: React.FC<LatexEditorProps> = ({
           }}
           className="p-4 min-h-[200px] flex items-center justify-center bg-white rounded border"
         >
-          {value.trim() ? (
-            <BlockMath math={value} />
-          ) : (
-            <div className="text-gray-400 text-sm">
-              Введите LaTeX формулу слева...
-            </div>
-          )}
+          <BlockMath math={value} />
         </div>
       );
     } catch (err) {
