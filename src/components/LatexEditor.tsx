@@ -26,9 +26,9 @@ const LatexEditor: React.FC<LatexEditorProps> = ({
       setError("");
       return (
         <div className="p-4 min-h-[200px] flex items-center justify-center bg-white rounded border">
-          <div className="text-gray-400 text-sm">
+          <span className="text-gray-400 text-sm">
             Введите LaTeX формулу слева...
-          </div>
+          </span>
         </div>
       );
     }
@@ -37,6 +37,7 @@ const LatexEditor: React.FC<LatexEditorProps> = ({
       const html = katex.renderToString(value, {
         displayMode: true,
         throwOnError: true,
+        strict: false,
       });
 
       setError("");
@@ -52,6 +53,7 @@ const LatexEditor: React.FC<LatexEditorProps> = ({
         />
       );
     } catch (err) {
+      console.error("KaTeX render error:", err);
       setError("Ошибка в синтаксисе LaTeX");
       return (
         <div className="p-4 min-h-[200px] flex items-center justify-center bg-red-50 rounded border border-red-200">
@@ -59,6 +61,21 @@ const LatexEditor: React.FC<LatexEditorProps> = ({
             <div className="font-medium">Ошибка синтаксиса</div>
             <div className="mt-1">Проверьте правильность LaTeX кода</div>
           </div>
+        </div>
+      );
+    }
+  };
+
+  const safeRenderFormula = () => {
+    try {
+      return renderFormula();
+    } catch (err) {
+      console.error("Formula render error:", err);
+      return (
+        <div className="p-4 min-h-[200px] flex items-center justify-center bg-yellow-50 rounded border border-yellow-200">
+          <span className="text-yellow-600 text-sm">
+            Ошибка рендеринга формулы
+          </span>
         </div>
       );
     }
@@ -94,7 +111,7 @@ const LatexEditor: React.FC<LatexEditorProps> = ({
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1">
-          <div id="formula-preview">{renderFormula()}</div>
+          <div id="formula-preview">{safeRenderFormula()}</div>
         </CardContent>
       </Card>
     </div>
