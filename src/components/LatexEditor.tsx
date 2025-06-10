@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import "katex/dist/katex.min.css";
+import katex from "katex";
 import { InlineMath, BlockMath } from "react-katex";
 
 interface LatexEditorProps {
@@ -34,6 +35,11 @@ const LatexEditor: React.FC<LatexEditorProps> = ({
         );
       }
 
+      const html = katex.renderToString(value, {
+        displayMode: true,
+        throwOnError: false,
+      });
+
       return (
         <div
           style={{
@@ -42,9 +48,8 @@ const LatexEditor: React.FC<LatexEditorProps> = ({
             fontWeight: fontWeight,
           }}
           className="p-4 min-h-[200px] flex items-center justify-center bg-white rounded border"
-        >
-          <BlockMath math={value} />
-        </div>
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
       );
     } catch (err) {
       setError("Ошибка в синтаксисе LaTeX");
